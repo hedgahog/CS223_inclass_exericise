@@ -1,0 +1,10 @@
+Biomni
+Pandas
+langchain-openai
+requests
+tqdm
+langchain-anthropic
+pyyaml
+mcp
+scanpy
+nest_asyncio
