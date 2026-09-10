@@ -26,3 +26,12 @@ def insertionSortIterative(arr):
             j -= 1
         arr[j + 1] = key
 
+def iterative_selection_sort(arr): # write two loops
+    n = len(arr)
+    for i in range(n-1): # first loop iterates through array
+        min_idx = i
+        print(min_idx)
+    for j in range(i+1, n):
+        if arr[j] < arr[min_idx]:
+            min_idx = j
+
