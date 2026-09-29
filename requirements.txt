@@ -1,3 +1,4 @@
+anndata
 Biomni
 Pandas
 langchain-openai

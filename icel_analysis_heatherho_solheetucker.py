@@ -1,0 +1,71 @@
+from sort_and_search_funs import *
+from util_funs import *
+import anndata as ad
+
+
+# Timed wrappers give every algorithm the same `sort(arr)` signature.
+@timer_decorator
+def timed_insertion_sort_rec(arr):
+    insertionSortRecursive(arr, len(arr))
+
+
+@timer_decorator
+def timed_quick_sort_rec(arr):
+    quick_sort_rec(arr, 0, len(arr) - 1)
+
+
+def sort_adata_desc(adata, column, sort_func):
+    """Return adata with rows reordered by `column`, largest first."""
+    # Pair each value with its cell name so the row order can be recovered after sorting.
+    pairs = list(zip(adata.obs[column], adata.obs_names))
+    sort_func(pairs)
+    pairs.reverse()  # sort functions are ascending
+
+    sorted_cell_names = [name for _, name in pairs]
+    return adata[sorted_cell_names].copy()
+
+
+def filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold):
+    if not 0 <= mt_exp_lvl_threshold <= 1:
+        raise ValueError("mt_exp_lvl_threshold must be between 0 and 1")
+    if not 0<= gene_exp_threshold <= 2000 :
+        raise ValueError("gene_exp_threshold must be between 0 and 2000")
+
+    # adata_insert_rec = copy adata to avoid modifying the original adata
+    adata_insert_rec = adata.copy()
+    adata_selection_rec = adata.copy()
+    adata_merge_rec = adata.copy()
+    adata_quick_rec = adata.copy()
+
+    # Sort tables by 3rd column, descending order, using different sorting algorithms, time with util_funs.
+    sort_column = adata.obs.columns[2]  # 'percent_mito'
+
+    adata_insert_rec = sort_adata_desc(adata_insert_rec, sort_column, timed_insertion_sort_rec)
+    adata_quick_rec = sort_adata_desc(adata_quick_rec, sort_column, timed_quick_sort_rec)
+    # TODO: selection / merge -- no recursive versions in sort_and_search_funs yet
+
+
+if __name__ == "__main__":
+    adata = ad.read_h5ad("./data/pbmc_sample.h5ad")
+
+    # Sanity checks: print intermediate results of the sorting step
+    sort_column = adata.obs.columns[2]
+    print(f"Loaded: {adata.n_obs} cells x {adata.n_vars} genes")
+    print(f"Sort column: '{sort_column}'")
+    print("Original (first 5):")
+    print(adata.obs[sort_column].head())
+
+    sorted_results = {
+        "insertion (rec)": sort_adata_desc(adata, sort_column, timed_insertion_sort_rec),
+        "quick (rec)": sort_adata_desc(adata, sort_column, timed_quick_sort_rec),
+    }
+
+    expected = sorted(adata.obs[sort_column], reverse=True)
+    for name, sorted_adata in sorted_results.items():
+        values = sorted_adata.obs[sort_column].tolist()
+        print(f"\n[{name}] shape: {sorted_adata.shape}")
+        print(f"[{name}] top 3: {values[:3]}, bottom 3: {values[-3:]}")
+        print(f"[{name}] matches sorted(reverse=True): {values == expected}")
+
+    print("\nOriginal adata unchanged:",
+          adata.obs[sort_column].tolist() != expected)
