@@ -35,3 +35,20 @@ def iterative_selection_sort(arr): # write two loops
         if arr[j] < arr[min_idx]:
             min_idx = j
 
+# ------Solhee------
+
+def quick_sort_iter(arr):
+    n = len(arr)
+    for i in range(n):
+        print(arr[i])
+
+
+# Temporary test driver (to be removed)
+if __name__ == "__main__":
+    sorted_arr = [1, 2, 3, 4, 5, 6]
+    unsorted_arr = [5, 2, 9, 1, 7, 3]
+
+    print("sorted:")
+    quick_sort_iter(sorted_arr)
+    print("unsorted:")
+    quick_sort_iter(unsorted_arr)
