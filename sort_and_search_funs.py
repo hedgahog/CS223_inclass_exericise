@@ -107,14 +107,56 @@ def quick_sort_iter(arr):
             stack[top] = h
 
 
-def quick_sort_rec(arr):
-    pass
+def quick_sort_rec(arr, low, high):
+    if low < high:
+        # pi is partitioning index, arr[p] is now
+        # at right place
+        pi = partition(arr, low, high)
+
+        # Separately sort elements before
+        # partition and after partition
+        quick_sort_rec(arr, low, pi - 1)
+        quick_sort_rec(arr, pi + 1, high)
+
+def binary_search_iter(arr, target):
+    low = 0
+    high = len(arr) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+
+def binary_search_rec(arr, target, low, high):
+    if low > high:
+        return -1
+
+    mid = (low + high) // 2
+    if arr[mid] == target:
+        return mid
+    elif arr[mid] < target:
+        return binary_search_rec(arr, target, mid + 1, high)
+    else:
+        return binary_search_rec(arr, target, low, mid - 1)
+
 
 # Temporary test driver (to be removed)
 if __name__ == "__main__":
-    arr1 = [1, 2, 3, 4, 5, 6]
-    arr2 = [5, 2, 9, 1, 7, 3]
+    arr = [5, 2, 9, 1, 7, 3]
+    quick_sort_iter(arr)
+    assert arr == [1, 2, 3, 5, 7, 9]
 
-    print("quick sort iter")
-    quick_sort_iter(arr2)
-    print(arr2)
+    arr = [5, 2, 9, 1, 7, 3]
+    quick_sort_rec(arr, 0, len(arr) - 1)
+    assert arr == [1, 2, 3, 5, 7, 9]
+
+    arr = [1, 2, 3, 5, 7, 9]
+    assert binary_search_iter(arr, 4) == -1
+    assert binary_search_rec(arr, 4, 0, 5) == -1
+
+    assert binary_search_iter(arr, 5) == 3
+    assert binary_search_rec(arr, 5, 0, 5) == 3
