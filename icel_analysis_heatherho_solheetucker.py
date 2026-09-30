@@ -102,6 +102,13 @@ def filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold):
     adata_merge_iter = sort_adata_desc(adata_merge_iter, sort_column, timed_merge_sort_iter)
     adata_quick_iter = sort_adata_desc(adata_quick_iter, sort_column, timed_quick_sort_iter)
 
+    # adata_filtered = filter col3 greater than mt_ecp_lvl_threshold
+    # af_insert_rec = copy
+    # ....
+    # do same thing, but sort with columm 2, ascending order, save time.
+
+    # adata_gene_exp_filtered = use one of result, filter it with gene_exp_thres argument.
+
 
 
 
