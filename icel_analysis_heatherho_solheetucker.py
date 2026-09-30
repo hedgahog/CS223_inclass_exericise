@@ -1,6 +1,7 @@
 from sort_and_search_funs import *
 from util_funs import *
 import anndata as ad
+import csv
 
 
 sort_times = {}  # algorithm label -> seconds, filled by the wrappers below
@@ -135,6 +136,8 @@ if __name__ == "__main__":
     print("\nOriginal adata unchanged:",
           adata.obs[sort_column].tolist() != expected)
 
-    print(f"\nSorting time summary ({adata.n_obs} cells, fastest first):")
-    for name, seconds in sorted(sort_times.items(), key=lambda item: item[1]):
-        print(f"  {name:<16} {seconds:.6f} s")
+    with open("sort_times.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["algorithm", "n_cells", "seconds"])
+        for name, seconds in sorted(sort_times.items(), key=lambda item: item[1]):
+            writer.writerow([name, adata.n_obs, f"{seconds:.6f}"])
