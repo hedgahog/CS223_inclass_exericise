@@ -242,15 +242,15 @@ if __name__ == "__main__":
         print(f"[{name}] shape: {filtered_adata.shape}")
 
     def split_label(label):
-        """Split a sort_times label into (algorithm, stage), e.g.
-        "insertion (rec) - genes" -> ("insertion (rec)", "genes_expressed")."""
+        """Split a sort_times label into (algorithm, stage, filtered), e.g.
+        "insertion (rec) - genes" -> ("insertion (rec)", "genes_expressed", "filtered")."""
         if label.endswith(" - genes"):
-            return label[: -len(" - genes")], "genes_expressed"
-        return label, "percent_mito"
+            return label[: -len(" - genes")], "genes_expressed", "filtered"
+        return label, "percent_mito", "unfiltered"
 
     with open("sort_times.csv", "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["algorithm", "stage", "n_cells", "seconds"])
+        writer.writerow(["algorithm", "stage", "filtered", "n_cells", "seconds"])
         rows = [(*split_label(name), n, seconds) for name, (seconds, n) in sort_times.items()]
-        for algorithm, stage, n, seconds in sorted(rows, key=lambda row: (row[0], row[1])):
-            writer.writerow([algorithm, stage, n, f"{seconds:.6f}"])
+        for algorithm, stage, filtered, n, seconds in sorted(rows, key=lambda row: (row[0], row[1])):
+            writer.writerow([algorithm, stage, filtered, n, f"{seconds:.6f}"])
