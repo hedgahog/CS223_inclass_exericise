@@ -30,10 +30,24 @@ def iterative_selection_sort(arr): # write two loops
     n = len(arr)
     for i in range(n-1): # first loop iterates through array
         min_idx = i
-        print(min_idx)
+        for j in range(i+1, n): # second loop finds the smallest of the unsorted rest
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        # Put the smallest element at the end of the sorted part
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+
+def recursive_selection_sort(arr, i, n):
+    # base case: 0 or 1 unsorted elements left
+    if i >= n-1:
+        return
+    # Find the smallest element of arr[i..n-1]
+    min_idx = i
     for j in range(i+1, n):
         if arr[j] < arr[min_idx]:
             min_idx = j
+    # Put it at the end of the sorted part, then sort the rest
+    arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    recursive_selection_sort(arr, i+1, n)
 
 # ------Solhee------
 
@@ -117,6 +131,59 @@ def quick_sort_rec(arr, low, high):
         # partition and after partition
         quick_sort_rec(arr, low, pi - 1)
         quick_sort_rec(arr, pi + 1, high)
+
+# Merge the sorted halves arr[l..m] and arr[m+1..h] back into arr[l..h]
+def merge(arr, l, m, h):
+    left = arr[l:m + 1]
+    right = arr[m + 1:h + 1]
+
+    i = 0
+    j = 0
+    k = l
+
+    while i < len(left) and j < len(right):
+        # <= keeps equal elements in their original order
+        if left[i] <= right[j]:
+            arr[k] = left[i]
+            i = i + 1
+        else:
+            arr[k] = right[j]
+            j = j + 1
+        k = k + 1
+
+    # Copy whatever is left of either half
+    while i < len(left):
+        arr[k] = left[i]
+        i = i + 1
+        k = k + 1
+    while j < len(right):
+        arr[k] = right[j]
+        j = j + 1
+        k = k + 1
+
+
+def merge_sort_rec(arr, low, high):
+    if low < high:
+        mid = (low + high) // 2
+
+        # Sort both halves, then merge them
+        merge_sort_rec(arr, low, mid)
+        merge_sort_rec(arr, mid + 1, high)
+        merge(arr, low, mid, high)
+
+
+def merge_sort_iter(arr):
+    n = len(arr)
+
+    # Bottom-up: merge runs of size 1, then 2, 4, 8, ...
+    size = 1
+    while size < n:
+        for low in range(0, n - size, 2 * size):
+            mid = low + size - 1
+            high = min(low + 2 * size - 1, n - 1)
+            merge(arr, low, mid, high)
+        size = size * 2
+
 
 def binary_search_iter(arr, target):
     low = 0
