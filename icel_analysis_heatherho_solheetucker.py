@@ -234,8 +234,8 @@ if __name__ == "__main__":
 
     # Run the full mito + gene-expression filtering pipeline (7b-7d) and
     # report the resulting cell counts for each algorithm variant.
-    mt_exp_lvl_threshold = 0.1
-    gene_exp_threshold = 200
+    mt_exp_lvl_threshold = 0.02
+    gene_exp_threshold = 500
     filtered_results = filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold)
     print(f"\nfilter_mt_cells(mt <= {mt_exp_lvl_threshold}, genes >= {gene_exp_threshold}):")
     for name, filtered_adata in filtered_results.items():
