@@ -1,0 +1,9 @@
+algorithm,n_cells,seconds
+quick (rec),700,0.000327
+quick (iter),700,0.000341
+merge (rec),700,0.000530
+merge (iter),700,0.000546
+insertion (rec),700,0.004887
+insertion (iter),700,0.004939
+selection (iter),700,0.006141
+selection (rec),700,0.006169
