@@ -3,15 +3,41 @@ from util_funs import *
 import anndata as ad
 
 
+sort_times = {}  # algorithm label -> seconds, filled by the wrappers below
+
+
+def record_time(label):
+    """Like timer_decorator, but stores the elapsed time in sort_times for a final summary."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            start = time.perf_counter()
+            result = func(*args, **kwargs)
+            sort_times[label] = time.perf_counter() - start
+            return result
+        return wrapper
+    return decorator
+
+
 # Timed wrappers give every algorithm the same `sort(arr)` signature.
-@timer_decorator
+@record_time("insertion (rec)")
 def timed_insertion_sort_rec(arr):
     insertionSortRecursive(arr, len(arr))
 
 
-@timer_decorator
+@record_time("quick (rec)")
 def timed_quick_sort_rec(arr):
     quick_sort_rec(arr, 0, len(arr) - 1)
+
+
+@record_time("insertion (iter)")
+def timed_insertion_sort_iter(arr):
+    insertionSortIterative(arr)
+
+
+@record_time("quick (iter)")
+def timed_quick_sort_iter(arr):
+    quick_sort_iter(arr)
 
 
 def sort_adata_desc(adata, column, sort_func):
@@ -44,6 +70,17 @@ def filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold):
     adata_quick_rec = sort_adata_desc(adata_quick_rec, sort_column, timed_quick_sort_rec)
     # TODO: selection / merge -- no recursive versions in sort_and_search_funs yet
 
+    adata_insert_iter = adata.copy()
+    adata_selection_iter = adata.copy()
+    adata_merge_iter = adata.copy()
+    adata_quick_iter = adata.copy()
+
+    adata_insert_iter = sort_adata_desc(adata_insert_iter, sort_column, timed_insertion_sort_iter)
+    adata_quick_iter = sort_adata_desc(adata_quick_iter, sort_column, timed_quick_sort_iter)
+    # TODO: selection (iterative_selection_sort is unfinished) / merge (not written yet)
+
+
+
 
 if __name__ == "__main__":
     adata = ad.read_h5ad("./data/pbmc_sample.h5ad")
@@ -58,6 +95,8 @@ if __name__ == "__main__":
     sorted_results = {
         "insertion (rec)": sort_adata_desc(adata, sort_column, timed_insertion_sort_rec),
         "quick (rec)": sort_adata_desc(adata, sort_column, timed_quick_sort_rec),
+        "insertion (iter)": sort_adata_desc(adata, sort_column, timed_insertion_sort_iter),
+        "quick (iter)": sort_adata_desc(adata, sort_column, timed_quick_sort_iter),
     }
 
     expected = sorted(adata.obs[sort_column], reverse=True)
@@ -69,3 +108,7 @@ if __name__ == "__main__":
 
     print("\nOriginal adata unchanged:",
           adata.obs[sort_column].tolist() != expected)
+
+    print(f"\nSorting time summary ({adata.n_obs} cells, fastest first):")
+    for name, seconds in sorted(sort_times.items(), key=lambda item: item[1]):
+        print(f"  {name:<16} {seconds:.6f} s")
