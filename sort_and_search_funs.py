@@ -1,24 +1,25 @@
-def insertionSortRecursive(arr,n):
+def insertionSortRecursive(arr, n):
     # base case
     if n <= 1:
         return
     # Sort first n-1 elements
-    insertionSortRecursive(arr, n-1)
+    insertionSortRecursive(arr, n - 1)
     # Insert last element at its correct position in sorted array.
-    last = arr[n-1]
-    j = n-2
+    last = arr[n - 1]
+    j = n - 2
     # Move elements of arr[0..i-1], that are greater than key, to one position ahead
     # of their current position
     while (j >= 0 and arr[j] > last):
-        arr[j+1] = arr[j]
-        j = j-1
-    arr[j+1] = last
+        arr[j + 1] = arr[j]
+        j = j - 1
+    arr[j + 1] = last
+
 
 def insertionSortIterative(arr):
     # Traverse through 1 to len(arr)
     for i in range(1, len(arr)):
         key = arr[i]
-        j = i-1
+        j = i - 1
         # Move elements of arr[0..i-1], that are greater than key, to one position ahead
         # of their current position
         while j >= 0 and key < arr[j]:
@@ -26,45 +27,45 @@ def insertionSortIterative(arr):
             j -= 1
         arr[j + 1] = key
 
-def iterative_selection_sort(arr): # write two loops
+
+def iterative_selection_sort(arr):  # write two loops
     n = len(arr)
-    for i in range(n-1): # first loop iterates through array
+    for i in range(n - 1):  # first loop iterates through array
         min_idx = i
-        for j in range(i+1, n): # second loop finds the smallest of the unsorted rest
+        for j in range(i + 1, n):  # second loop finds the smallest of the unsorted rest
             if arr[j] < arr[min_idx]:
                 min_idx = j
         # Put the smallest element at the end of the sorted part
         arr[i], arr[min_idx] = arr[min_idx], arr[i]
 
+
 def recursive_selection_sort(arr, i, n):
     # base case: 0 or 1 unsorted elements left
-    if i >= n-1:
+    if i >= n - 1:
         return
     # Find the smallest element of arr[i..n-1]
     min_idx = i
-    for j in range(i+1, n):
+    for j in range(i + 1, n):
         if arr[j] < arr[min_idx]:
             min_idx = j
     # Put it at the end of the sorted part, then sort the rest
     arr[i], arr[min_idx] = arr[min_idx], arr[i]
-    recursive_selection_sort(arr, i+1, n)
-
-# ------Solhee------
+    recursive_selection_sort(arr, i + 1, n)
 
 
 def partition(arr, l, h):
-    i = ( l - 1 )
+    i = (l - 1)
     x = arr[h]
 
     for j in range(l, h):
-        if   arr[j] <= x:
-
+        if arr[j] <= x:
             # increment index of smaller element
             i = i + 1
             arr[i], arr[j] = arr[j], arr[i]
 
     arr[i + 1], arr[h] = arr[h], arr[i + 1]
     return (i + 1)
+
 
 # Function to do Quick sort
 # arr[] --> Array to be sorted,
@@ -102,11 +103,11 @@ def quick_sort_iter(arr):
 
         # Set pivot element at its correct position in
         # sorted array
-        p = partition( arr, l, h )
+        p = partition(arr, l, h)
 
         # If there are elements on left side of pivot,
         # then push left side to stack
-        if p-1 > l:
+        if p - 1 > l:
             top = top + 1
             stack[top] = l
             top = top + 1
@@ -131,6 +132,7 @@ def quick_sort_rec(arr, low, high):
         # partition and after partition
         quick_sort_rec(arr, low, pi - 1)
         quick_sort_rec(arr, pi + 1, high)
+
 
 # Merge the sorted halves arr[l..m] and arr[m+1..h] back into arr[l..h]
 def merge(arr, l, m, h):
@@ -198,6 +200,7 @@ def binary_search_iter(arr, target):
             high = mid - 1
     return -1
 
+
 def binary_search_rec(arr, target, low, high):
     if low > high:
         return -1
@@ -211,7 +214,6 @@ def binary_search_rec(arr, target, low, high):
         return binary_search_rec(arr, target, low, mid - 1)
 
 
-# Temporary test driver (to be removed)
 if __name__ == "__main__":
     arr = [5, 2, 9, 1, 7, 3]
     quick_sort_iter(arr)

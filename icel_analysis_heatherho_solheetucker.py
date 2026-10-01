@@ -3,12 +3,12 @@ from util_funs import *
 import anndata as ad
 import csv
 
-
 sort_times = {}  # algorithm label -> (seconds, n_cells sorted), filled by the wrappers below
 
 
 def record_time(label):
     """Like timer_decorator, but stores the elapsed time in sort_times for a final summary."""
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(arr, *args, **kwargs):
@@ -17,7 +17,9 @@ def record_time(label):
             result = func(arr, *args, **kwargs)
             sort_times[label] = (time.perf_counter() - start, n)
             return result
+
         return wrapper
+
     return decorator
 
 
@@ -119,7 +121,7 @@ def sort_adata(adata, column, sort_func, descending=True):
 def filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold):
     if not 0 <= mt_exp_lvl_threshold <= 1:
         raise ValueError("mt_exp_lvl_threshold must be between 0 and 1")
-    if not 0<= gene_exp_threshold <= 2000 :
+    if not 0 <= gene_exp_threshold <= 2000:
         raise ValueError("gene_exp_threshold must be between 0 and 2000")
 
     # adata_insert_rec = copy adata to avoid modifying the original adata
@@ -145,7 +147,6 @@ def filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold):
     adata_selection_iter = sort_adata(adata_selection_iter, sort_column, timed_selection_sort_iter, descending=True)
     adata_merge_iter = sort_adata(adata_merge_iter, sort_column, timed_merge_sort_iter, descending=True)
     adata_quick_iter = sort_adata(adata_quick_iter, sort_column, timed_quick_sort_iter, descending=True)
-    #--------Heather--------
     # 7c
     # from each sorted dataframe, create new dataframe that
     # doesn't contain a cell row entry if value in col 3 is greater than 
@@ -162,9 +163,8 @@ def filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold):
     af_insert_iter = adata_insert_iter[adata_insert_iter.obs[sort_column] <= mt_exp_lvl_threshold].copy()
     af_selection_iter = adata_selection_iter[adata_selection_iter.obs[sort_column] <= mt_exp_lvl_threshold].copy()
     af_merge_iter = adata_merge_iter[adata_merge_iter.obs[sort_column] <= mt_exp_lvl_threshold].copy()
-    af_quick_iter = adata_quick_iter[adata_quick_iter.obs[sort_column] <= mt_exp_lvl_threshold].copy()  
+    af_quick_iter = adata_quick_iter[adata_quick_iter.obs[sort_column] <= mt_exp_lvl_threshold].copy()
 
-    
     # 7d: take the mito-filtered results from 7c and sort them by column 2
     # (genes expressed), ascending order, timing each algorithm again.
     gene_column = adata.obs.columns[1]  # 'n_genes_by_counts'
@@ -241,12 +241,14 @@ if __name__ == "__main__":
     for name, filtered_adata in filtered_results.items():
         print(f"[{name}] shape: {filtered_adata.shape}")
 
+
     def split_label(label):
         """Split a sort_times label into (algorithm, stage, filtered), e.g.
         "insertion (rec) - genes" -> ("insertion (rec)", "genes_expressed", "filtered")."""
         if label.endswith(" - genes"):
             return label[: -len(" - genes")], "genes_expressed", "filtered"
         return label, "percent_mito", "unfiltered"
+
 
     with open("sort_times.csv", "w", newline="") as f:
         writer = csv.writer(f)
