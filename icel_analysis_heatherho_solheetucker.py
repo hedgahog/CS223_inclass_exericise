@@ -5,7 +5,8 @@ import csv
 
 sort_times = {}  # algorithm label -> (seconds, n_cells sorted), filled by the wrappers below
 
-#ST
+
+# ST
 def record_time(label):
     """Like timer_decorator, but stores the elapsed time in sort_times for a final summary."""
 
@@ -22,48 +23,57 @@ def record_time(label):
 
     return decorator
 
-#ST
+
+# ST
 # Timed wrappers give every algorithm the same `sort(arr)` signature.
 @record_time("insertion (rec)")
 def timed_insertion_sort_rec(arr):
     insertionSortRecursive(arr, len(arr))
 
-#ST
+
+# ST
 @record_time("selection (rec)")
 def timed_selection_sort_rec(arr):
     recursive_selection_sort(arr, 0, len(arr))
 
-#ST
+
+# ST
 @record_time("merge (rec)")
 def timed_merge_sort_rec(arr):
     merge_sort_rec(arr, 0, len(arr) - 1)
 
-#ST
+
+# ST
 @record_time("quick (rec)")
 def timed_quick_sort_rec(arr):
     quick_sort_rec(arr, 0, len(arr) - 1)
 
-#ST
+
+# ST
 @record_time("insertion (iter)")
 def timed_insertion_sort_iter(arr):
     insertionSortIterative(arr)
 
-#ST
+
+# ST
 @record_time("selection (iter)")
 def timed_selection_sort_iter(arr):
     iterative_selection_sort(arr)
 
-#ST
+
+# ST
 @record_time("merge (iter)")
 def timed_merge_sort_iter(arr):
     merge_sort_iter(arr)
 
-#ST
+
+# ST
 @record_time("quick (iter)")
 def timed_quick_sort_iter(arr):
     quick_sort_iter(arr)
 
-#HH
+
+# HH
 # Second set of timed wrappers, used for the Col 2 (genes expressed) sort in
 # filter_mt_cells, so those timings land under their own labels instead of
 # overwriting the Col 3 (percent_mito) timings recorded above.
@@ -71,42 +81,50 @@ def timed_quick_sort_iter(arr):
 def timed_insertion_sort_rec_genes(arr):
     insertionSortRecursive(arr, len(arr))
 
-#HH
+
+# HH
 @record_time("selection (rec) - genes")
 def timed_selection_sort_rec_genes(arr):
     recursive_selection_sort(arr, 0, len(arr))
 
-#HH
+
+# HH
 @record_time("merge (rec) - genes")
 def timed_merge_sort_rec_genes(arr):
     merge_sort_rec(arr, 0, len(arr) - 1)
 
-#HH
+
+# HH
 @record_time("quick (rec) - genes")
 def timed_quick_sort_rec_genes(arr):
     quick_sort_rec(arr, 0, len(arr) - 1)
 
-#HH
+
+# HH
 @record_time("insertion (iter) - genes")
 def timed_insertion_sort_iter_genes(arr):
     insertionSortIterative(arr)
 
-#HH
+
+# HH
 @record_time("selection (iter) - genes")
 def timed_selection_sort_iter_genes(arr):
     iterative_selection_sort(arr)
 
-#HH
+
+# HH
 @record_time("merge (iter) - genes")
 def timed_merge_sort_iter_genes(arr):
     merge_sort_iter(arr)
 
-#HH
+
+# HH
 @record_time("quick (iter) - genes")
 def timed_quick_sort_iter_genes(arr):
     quick_sort_iter(arr)
 
-#ST
+
+# ST
 def sort_adata(adata, column, sort_func, descending=True):
     """Return adata with rows reordered by `column`, largest first."""
     # Pair each value with its cell name so the row order can be recovered after sorting.
@@ -117,7 +135,8 @@ def sort_adata(adata, column, sort_func, descending=True):
     sorted_cell_names = [name for _, name in pairs]
     return adata[sorted_cell_names].copy()
 
-#ST, HH
+
+# ST, HH
 def filter_mt_cells(adata, mt_exp_lvl_threshold, gene_exp_threshold):
     if not 0 <= mt_exp_lvl_threshold <= 1:
         raise ValueError("mt_exp_lvl_threshold must be between 0 and 1")
@@ -241,7 +260,8 @@ if __name__ == "__main__":
     for name, filtered_adata in filtered_results.items():
         print(f"[{name}] shape: {filtered_adata.shape}")
 
-    #HH
+
+    # HH
     def split_label(label):
         """Split a sort_times label into (algorithm, stage, filtered), e.g.
         "insertion (rec) - genes" -> ("insertion (rec)", "genes_expressed", "filtered")."""
@@ -249,7 +269,8 @@ if __name__ == "__main__":
             return label[: -len(" - genes")], "genes_expressed", "filtered"
         return label, "percent_mito", "unfiltered"
 
-    #ST
+
+    # ST
     with open("sort_times.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["algorithm", "stage", "filtered", "n_cells", "seconds"])

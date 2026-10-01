@@ -1,4 +1,4 @@
-#HH
+# HH
 def insertionSortRecursive(arr, n):
     # base case
     if n <= 1:
@@ -15,7 +15,8 @@ def insertionSortRecursive(arr, n):
         j = j - 1
     arr[j + 1] = last
 
-#HH
+
+# HH
 def insertionSortIterative(arr):
     # Traverse through 1 to len(arr)
     for i in range(1, len(arr)):
@@ -28,7 +29,8 @@ def insertionSortIterative(arr):
             j -= 1
         arr[j + 1] = key
 
-#ST
+
+# ST
 def iterative_selection_sort(arr):  # write two loops
     n = len(arr)
     for i in range(n - 1):  # first loop iterates through array
@@ -39,7 +41,8 @@ def iterative_selection_sort(arr):  # write two loops
         # Put the smallest element at the end of the sorted part
         arr[i], arr[min_idx] = arr[min_idx], arr[i]
 
-#ST
+
+# ST
 def recursive_selection_sort(arr, i, n):
     # base case: 0 or 1 unsorted elements left
     if i >= n - 1:
@@ -53,7 +56,8 @@ def recursive_selection_sort(arr, i, n):
     arr[i], arr[min_idx] = arr[min_idx], arr[i]
     recursive_selection_sort(arr, i + 1, n)
 
-#ST
+
+# ST
 def partition(arr, l, h):
     i = (l - 1)
     x = arr[h]
@@ -68,7 +72,7 @@ def partition(arr, l, h):
     return (i + 1)
 
 
-#ST
+# ST
 # Function to do Quick sort
 # arr[] --> Array to be sorted,
 # l  --> Starting index,
@@ -123,7 +127,8 @@ def quick_sort_iter(arr):
             top = top + 1
             stack[top] = h
 
-#ST
+
+# ST
 def quick_sort_rec(arr, low, high):
     if low < high:
         # pi is partitioning index, arr[p] is now
@@ -136,7 +141,7 @@ def quick_sort_rec(arr, low, high):
         quick_sort_rec(arr, pi + 1, high)
 
 
-#ST
+# ST
 # Merge the sorted halves arr[l..m] and arr[m+1..h] back into arr[l..h]
 def merge(arr, l, m, h):
     left = arr[l:m + 1]
@@ -166,7 +171,8 @@ def merge(arr, l, m, h):
         j = j + 1
         k = k + 1
 
-#ST
+
+# ST
 def merge_sort_rec(arr, low, high):
     if low < high:
         mid = (low + high) // 2
@@ -176,7 +182,8 @@ def merge_sort_rec(arr, low, high):
         merge_sort_rec(arr, mid + 1, high)
         merge(arr, low, mid, high)
 
-#ST
+
+# ST
 def merge_sort_iter(arr):
     n = len(arr)
 
@@ -189,7 +196,8 @@ def merge_sort_iter(arr):
             merge(arr, low, mid, high)
         size = size * 2
 
-#ST
+
+# ST
 def binary_search_iter(arr, target):
     low = 0
     high = len(arr) - 1
@@ -203,7 +211,8 @@ def binary_search_iter(arr, target):
             high = mid - 1
     return -1
 
-#ST
+
+# ST
 def binary_search_rec(arr, target, low, high):
     if low > high:
         return -1
